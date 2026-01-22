@@ -340,10 +340,6 @@ npm start
 6. Access frontend at http://localhost:5174
 7. API available at http://localhost:5000
 
-## 📄 License
-
-MIT License - Feel free to use for your projects
-
+##
 ---
-
 **Happy Coding! 🎉**
