@@ -61,6 +61,7 @@ const RoleSelection = () => {
                   <button className="mt-6 bg-white text-gray-800 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-200 w-full">
                     Continue as {role.title}
                   </button>
+                  {role.extra && role.extra}
                 </div>
               </div>
             </div>

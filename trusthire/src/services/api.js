@@ -37,6 +37,7 @@ api.interceptors.response.use(
 export const authService = {
   register: (formData) => api.post('/auth/register', formData),
   login: (credentials) => api.post('/auth/login', credentials),
+  registerWorker: (formData) => api.post('/auth/register-worker', formData),
   validateToken: (token) => api.get('/auth/validate', {
     headers: { Authorization: `Bearer ${token}` }
   }),
