@@ -4,12 +4,14 @@ import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
+import UserHome from './pages/UserHome';
 import RoleSelection from './pages/RoleSelection';
 import Login from './pages/Login';
 import LoginAdmin from './pages/LoginAdmin';
 import LoginWorker from './pages/LoginWorker';
 import LoginEmployer from './pages/LoginEmployer';
 import WorkerSignup from './pages/WorkerSignup';
+import EmployerSignup from './pages/EmployerSignup';
 import WorkerProfile from './pages/WorkerProfile';
 import EmployeeDashboard from './pages/EmployeeDashboard';
 import AdminDashboard from './pages/AdminDashboard';
@@ -46,6 +48,16 @@ function AppContent() {
           <Route path="/login-worker" element={<LoginWorker />} />
           <Route path="/login-employer" element={<LoginEmployer />} />
           <Route path="/worker-signup" element={<WorkerSignup />} />
+          <Route path="/employer-signup" element={<EmployerSignup />} />
+          
+          <Route
+            path="/user-home"
+            element={
+              <ProtectedRoute>
+                <UserHome />
+              </ProtectedRoute>
+            }
+          />
           
           <Route
             path="/worker-profile"

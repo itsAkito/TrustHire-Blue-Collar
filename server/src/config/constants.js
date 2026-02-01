@@ -1,6 +1,7 @@
 export const ROLES = {
   WORKER: 'worker',
   EMPLOYER: 'employer',
+  ADMIN: 'admin',
 };
 
 export const JOB_TYPES = {

@@ -35,13 +35,36 @@ api.interceptors.response.use(
 
 // Auth Services
 export const authService = {
-  register: (formData) => api.post('/auth/register', formData),
-  login: (credentials) => api.post('/auth/login', credentials),
-  registerWorker: (formData) => api.post('/auth/register-worker', formData),
-  validateToken: (token) => api.get('/auth/validate', {
-    headers: { Authorization: `Bearer ${token}` }
-  }),
-  logout: () => api.post('/auth/logout'),
+  // User endpoints
+  register: (formData) => api.post('/users/register', formData),
+  login: (credentials) => api.post('/users/login', credentials),
+  verifyOTP: (data) => api.post('/users/verify-otp', data),
+  resendOTP: (email) => api.post('/users/resend-otp', { email }),
+  getProfile: () => api.get('/users/profile'),
+  updateProfile: (data) => api.put('/users/profile', data),
+  changePassword: (data) => api.post('/users/change-password', data),
+  
+  // Admin endpoints
+  adminLogin: (credentials) => api.post('/admin/login', credentials),
+  
+  // Utility functions
+  validateToken: (token) => {
+    // Check token format
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const isExpired = payload.exp * 1000 < Date.now();
+      if (isExpired) {
+        return Promise.reject(new Error('Token expired'));
+      }
+      return Promise.resolve(payload);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  },
+  logout: () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole');
+  },
 };
 
 export const validateToken = (token) => authService.validateToken(token);
@@ -128,7 +151,7 @@ export const workerService = {
   updateProfile: (formData) => api.put('/workers/profile', formData),
   getAvailableJobs: async (filters) => {
     try {
-      return await api.get('/workers/jobs', { params: filters });
+      return await api.get('/jobs', { params: filters });
     } catch (error) {
       return {
         data: MOCK_JOBS.filter(job => {
@@ -140,12 +163,12 @@ export const workerService = {
       };
     }
   },
-  applyForJob: (jobId) => api.post(`/workers/jobs/${jobId}/apply`),
+  applyForJob: (jobId) => api.post(`/applications/${jobId}`),
   getApplications: () => api.get('/workers/applications'),
   updateLocation: (location) => api.put('/workers/location', location),
   searchJobs: async (searchTerm, filters) => {
     try {
-      return await api.get('/workers/jobs/search', { params: { q: searchTerm, ...filters } });
+      return await api.get('/jobs', { params: { q: searchTerm, ...filters } });
     } catch (error) {
       return {
         data: MOCK_JOBS.filter(job =>

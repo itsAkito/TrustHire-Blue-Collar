@@ -8,7 +8,7 @@ export const submitApplication = async (req, res) => {
 
     const job = await Job.findByPk(jobId);
     if (!job) {
-      return res.status(404).json({ message: 'Job not found' });
+      return res.status(404).json({ success: false, message: 'Job not found' });
     }
 
     const existingApplication = await Application.findOne({
@@ -16,7 +16,7 @@ export const submitApplication = async (req, res) => {
     });
 
     if (existingApplication) {
-      return res.status(400).json({ message: 'Already applied for this job' });
+      return res.status(400).json({ success: false, message: 'Already applied for this job' });
     }
 
     const application = await Application.create({
@@ -25,12 +25,13 @@ export const submitApplication = async (req, res) => {
     });
 
     res.status(201).json({
+      success: true,
       message: 'Application submitted successfully',
       data: application,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 
@@ -48,13 +49,13 @@ export const getApplicationStatus = async (req, res) => {
     });
 
     if (!application) {
-      return res.status(404).json({ message: 'Application not found' });
+      return res.status(404).json({ success: false, message: 'Application not found' });
     }
 
-    res.json({ data: application });
+    res.json({ success: true, data: application });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 
@@ -64,18 +65,18 @@ export const withdrawApplication = async (req, res) => {
 
     const application = await Application.findByPk(applicationId);
     if (!application) {
-      return res.status(404).json({ message: 'Application not found' });
+      return res.status(404).json({ success: false, message: 'Application not found' });
     }
 
     if (application.workerId !== req.user.id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      return res.status(403).json({ success: false, message: 'Unauthorized' });
     }
 
     await application.update({ status: 'withdrawn' });
 
-    res.json({ message: 'Application withdrawn successfully' });
+    res.json({ success: true, message: 'Application withdrawn successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };

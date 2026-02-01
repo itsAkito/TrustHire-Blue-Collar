@@ -29,7 +29,7 @@ const User = sequelize.define(
       allowNull: true,
     },
     role: {
-      type: DataTypes.ENUM(ROLES.WORKER, ROLES.EMPLOYER),
+      type: DataTypes.ENUM(ROLES.WORKER, ROLES.EMPLOYER, ROLES.ADMIN),
       defaultValue: ROLES.WORKER,
     },
     profilePhoto: {
@@ -53,6 +53,22 @@ const User = sequelize.define(
       defaultValue: 0,
     },
     verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    otp: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    otpExpires: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    otpVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    emailVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

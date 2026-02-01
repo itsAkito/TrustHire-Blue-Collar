@@ -109,26 +109,21 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Registration Options */}
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => navigate('/register-worker')}
-              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 rounded-lg transition duration-200"
-            >
-              Join as Worker
-            </button>
-            <button
-              onClick={() => navigate('/register-employer')}
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 rounded-lg transition duration-200"
-            >
-              Join as Employer
-            </button>
-          </div>
+          {/* Registration Option */}
+          <button
+            onClick={() => navigate('/worker-signup')}
+            className="w-full bg-blue-50 hover:bg-blue-100 text-blue-600 font-semibold py-3 rounded-lg transition duration-200 border border-blue-200"
+          >
+            Create Account
+          </button>
 
-          {/* Footer */}
-          <p className="text-center text-xs text-gray-600">
-            By signing in, you agree to our Terms of Service and Privacy Policy
-          </p>
+          {/* Back Button */}
+          <button
+            onClick={() => navigate('/role-selection')}
+            className="w-full text-gray-600 hover:text-gray-800 font-semibold py-2 transition"
+          >
+            ← Back to Role Selection
+          </button>
         </div>
       </div>
     </div>

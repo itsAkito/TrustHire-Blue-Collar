@@ -31,10 +31,9 @@ const LoginWorker = () => {
       const response = await authService.login({
         email: formData.email,
         password: formData.password,
-        role: 'worker',
       });
-      login(response.data.user, response.data.token, 'worker');
-      navigate('/worker-profile');
+      login(response.data.user, response.data.token, response.data.user.role || 'worker');
+      navigate('/user-home');
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred. Please try again.');
     } finally {

@@ -1,0 +1,286 @@
+.user-profile-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 500px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.user-profile-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.user-card-header {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+  border-bottom: 1px solid #e8eef5;
+}
+
+.user-card-image {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 42px;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.verified-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
+  background: #10b981;
+  border: 3px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.user-info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.user-name-rating {
+  margin-bottom: 8px;
+}
+
+.user-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.rating-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 16px;
+}
+
+.rating-stars {
+  color: #fbbf24;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.user-badges {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-verified {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-role {
+  background: #dbeafe;
+  color: #0c4a6e;
+}
+
+.user-phone {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4a5568;
+  font-size: 14px;
+  margin: 0;
+}
+
+.user-phone .icon {
+  font-size: 16px;
+}
+
+.user-card-body {
+  padding: 24px;
+  border-bottom: 1px solid #e8eef5;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+}
+
+.bio-section {
+  margin-bottom: 20px;
+}
+
+.bio-text {
+  color: #4a5568;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.skills-section {
+  margin-bottom: 20px;
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.experience-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.exp-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: #f7fafc;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.exp-label {
+  font-size: 12px;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.exp-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.user-card-footer {
+  padding: 16px 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.btn-edit,
+.btn-view {
+  flex: 1;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+}
+
+.btn-edit:hover {
+  opacity: 0.9;
+}
+
+.btn-view {
+  background: white;
+  border: 2px solid #e8eef5;
+  color: #667eea;
+}
+
+.btn-view:hover {
+  background: #f7fafc;
+  border-color: #667eea;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .user-card-header {
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .profile-img,
+  .profile-img-placeholder {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+
+  .user-name {
+    font-size: 20px;
+  }
+
+  .user-card-body {
+    padding: 16px;
+  }
+
+  .user-card-footer {
+    flex-direction: column;
+    padding: 12px 16px;
+  }
+
+  .btn-edit,
+  .btn-view {
+    flex: 1;
+  }
+}

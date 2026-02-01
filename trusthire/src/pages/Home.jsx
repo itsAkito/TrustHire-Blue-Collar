@@ -164,7 +164,7 @@ const Home = () => {
           ) : jobs.length > 0 ? (
             jobs.map((job) => (
               <Card
-                key={job._id}
+                key={job.id || job._id}
                 title={job.title}
                 description={job.location}
                 className="flex flex-col h-full"
@@ -180,7 +180,7 @@ const Home = () => {
                   </div>
                   <div className="flex justify-between items-start">
                     <span className="font-semibold text-gray-700">Company:</span>
-                    <span className="text-gray-600">{job.employerName}</span>
+                    <span className="text-gray-600">{job.employer?.name || 'Company'}</span>
                   </div>
                   <p className="text-gray-600 text-sm mt-3">{job.description}</p>
                 </div>
@@ -188,7 +188,7 @@ const Home = () => {
                 <Button
                   variant="primary"
                   fullWidth
-                  onClick={() => handleApplyJob(job._id)}
+                  onClick={() => handleApplyJob(job.id || job._id)}
                   className="mt-auto"
                 >
                   Apply Now

@@ -8,12 +8,12 @@ export const register = async (req, res) => {
   try {
     const { error, value } = validateRegister(req.body);
     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
+      return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
     const existingUser = await User.findOne({ where: { email: value.email } });
     if (existingUser) {
-      return res.status(400).json({ message: ERROR_MESSAGES.USER_EXISTS });
+      return res.status(409).json({ success: false, message: ERROR_MESSAGES.USER_EXISTS });
     }
 
     const hashedPassword = await bcrypt.hash(value.password, 10);
@@ -32,6 +32,7 @@ export const register = async (req, res) => {
     );
 
     res.status(201).json({
+      success: true,
       message: SUCCESS_MESSAGES.REGISTRATION_SUCCESS,
       user: {
         id: user.id,
@@ -51,17 +52,17 @@ export const login = async (req, res) => {
   try {
     const { error, value } = validateLogin(req.body);
     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
+      return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
     const user = await User.findOne({ where: { email: value.email } });
     if (!user) {
-      return res.status(400).json({ message: ERROR_MESSAGES.INVALID_CREDENTIALS });
+      return res.status(401).json({ success: false, message: ERROR_MESSAGES.INVALID_CREDENTIALS });
     }
 
     const isValidPassword = await bcrypt.compare(value.password, user.password);
     if (!isValidPassword) {
-      return res.status(400).json({ message: ERROR_MESSAGES.INVALID_CREDENTIALS });
+      return res.status(401).json({ success: false, message: ERROR_MESSAGES.INVALID_CREDENTIALS });
     }
 
     const token = jwt.sign(
@@ -71,6 +72,7 @@ export const login = async (req, res) => {
     );
 
     res.json({
+      success: true,
       message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
       user: {
         id: user.id,
@@ -82,10 +84,27 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 
 export const logout = (req, res) => {
-  res.json({ message: 'Logged out successfully' });
+  res.json({ success: true, message: 'Logged out successfully' });
+};
+
+export const validateToken = (req, res) => {
+  try {
+    const user = req.user;
+    res.json({
+      success: true,
+      message: 'Token is valid',
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(401).json({ success: false, message: 'Invalid token' });
+  }
 };

@@ -28,10 +28,9 @@ const LoginAdmin = () => {
     setError('');
 
     try {
-      const response = await authService.login({
+      const response = await authService.adminLogin({
         email: formData.email,
         password: formData.password,
-        role: 'admin',
       });
       login(response.data.user, response.data.token, 'admin');
       navigate('/admin-dashboard');

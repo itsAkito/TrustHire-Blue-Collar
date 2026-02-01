@@ -6,31 +6,21 @@ const RoleSelection = () => {
 
   const roles = [
     {
-      id: 'worker',
-      title: 'Worker',
-      description: 'Looking for jobs? Join as a skilled worker.',
-      icon: '👷',
+      id: 'user',
+      title: 'User / Employee',
+      description: 'Login or join as an employee/worker.',
+      icon: '👤',
       gradient: 'from-blue-500 to-cyan-500',
-      path: '/worker-signup',
-      extra: (
-        <span className="block text-xs mt-2 text-blue-200">Already registered? <button className="underline" onClick={() => navigate('/login-worker')}>Login</button></span>
-      )
-    },
-    {
-      id: 'employer',
-      title: 'Employer',
-      description: 'Need skilled workers? Post jobs and hire talent.',
-      icon: '💼',
-      gradient: 'from-purple-500 to-pink-500',
-      path: '/login-employer'
+      loginPath: '/login-worker',
+      signupPath: '/worker-signup',
     },
     {
       id: 'admin',
       title: 'Admin',
-      description: 'Manage the platform and oversee operations.',
+      description: 'Administrator portal for platform management.',
       icon: '⚙️',
       gradient: 'from-orange-500 to-red-500',
-      path: '/login-admin'
+      loginPath: '/login-admin',
     }
   ];
 
@@ -44,12 +34,11 @@ const RoleSelection = () => {
         </div>
 
         {/* Role Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {roles.map((role) => (
             <div
               key={role.id}
-              onClick={() => navigate(role.path)}
-              className="group cursor-pointer"
+              className="group"
             >
               <div className={`bg-gradient-to-br ${role.gradient} p-8 rounded-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300`}>
                 <div className="flex flex-col items-center justify-center h-full space-y-6">
@@ -58,10 +47,26 @@ const RoleSelection = () => {
                     <h2 className="text-2xl font-bold text-white text-center">{role.title}</h2>
                     <p className="text-white text-center text-sm mt-3 opacity-90">{role.description}</p>
                   </div>
-                  <button className="mt-6 bg-white text-gray-800 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-200 w-full">
-                    Continue as {role.title}
-                  </button>
-                  {role.extra && role.extra}
+                  
+                  {/* Action Buttons */}
+                  <div className="w-full space-y-2">
+                    {role.signupPath && (
+                      <button 
+                        onClick={() => navigate(role.signupPath)}
+                        className="w-full bg-white text-gray-800 font-semibold py-3 rounded-lg hover:bg-gray-100 transition duration-200"
+                      >
+                        Join
+                      </button>
+                    )}
+                    {role.loginPath && (
+                      <button 
+                        onClick={() => navigate(role.loginPath)}
+                        className={`w-full ${role.signupPath ? 'bg-white bg-opacity-20 text-white' : 'bg-white text-gray-800'} font-semibold py-3 rounded-lg hover:${role.signupPath ? 'bg-opacity-30' : 'bg-gray-100'} transition duration-200`}
+                      >
+                        {role.signupPath ? 'Already have account? Login' : 'Login'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

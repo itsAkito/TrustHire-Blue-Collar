@@ -31,10 +31,9 @@ const LoginEmployer = () => {
       const response = await authService.login({
         email: formData.email,
         password: formData.password,
-        role: 'employer',
       });
-      login(response.data.user, response.data.token, 'employer');
-      navigate('/employer-dashboard');
+      login(response.data.user, response.data.token, response.data.user.role || 'employer');
+      navigate('/user-home');
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred. Please try again.');
     } finally {
@@ -117,7 +116,7 @@ const LoginEmployer = () => {
 
           {/* Registration Link */}
           <button
-            onClick={() => navigate('/register-employer')}
+            onClick={() => navigate('/employer-signup')}
             className="w-full bg-purple-50 hover:bg-purple-100 text-purple-600 font-semibold py-3 rounded-lg transition duration-200 border border-purple-200"
           >
             Create Employer Account
