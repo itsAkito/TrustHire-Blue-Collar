@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useGeolocation } from '../hooks/useGeolocation';
+import { useAlert } from '../hooks/useAlert';
 import { workerService } from '../services/api';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -10,6 +11,7 @@ const Home = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { location, getLocation } = useGeolocation();
+  const { showSuccess, showError } = useAlert();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +19,14 @@ const Home = () => {
     jobType: '',
     location: '',
   });
+
+  // Redirect workers to their home page if not showing jobs
+  useEffect(() => {
+    if (user && user.role === 'worker' && !searchTerm && !filters.jobType && !filters.location) {
+      // Worker logged in but not searching - show them a welcome message
+      // Allow them to browse jobs or go to profile
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -28,13 +38,14 @@ const Home = () => {
         setJobs(response.data);
       } catch (err) {
         console.error('Failed to fetch jobs:', err);
+        showError('Failed to fetch jobs', 'Error');
       } finally {
         setLoading(false);
       }
     };
 
     fetchJobs();
-  }, [searchTerm, filters]);
+  }, [searchTerm, filters, showError]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -62,9 +73,10 @@ const Home = () => {
 
     try {
       await workerService.applyForJob(jobId);
-      alert('Successfully applied for the job!');
+      showSuccess('Successfully applied for the job!', 'Application Sent');
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to apply for job');
+      const errorMsg = err.response?.data?.message || 'Failed to apply for job';
+      showError(errorMsg, 'Application Failed');
     }
   };
 

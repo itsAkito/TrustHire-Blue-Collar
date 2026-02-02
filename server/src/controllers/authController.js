@@ -21,6 +21,7 @@ export const register = async (req, res) => {
     const user = await User.create({
       name: value.name,
       email: value.email,
+      phone: value.phone || null,
       password: hashedPassword,
       role: value.role,
     });
@@ -38,6 +39,7 @@ export const register = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         role: user.role,
       },
       token,
@@ -78,6 +80,7 @@ export const login = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         role: user.role,
       },
       token,
@@ -100,7 +103,9 @@ export const validateToken = (req, res) => {
       message: 'Token is valid',
       user: {
         id: user.id,
+        name: user.name,
         email: user.email,
+        phone: user.phone,
         role: user.role,
       },
     });

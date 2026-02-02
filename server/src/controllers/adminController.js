@@ -372,3 +372,94 @@ export const updateAdminProfile = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+// Create employee (admin only)
+export const createEmployee = async (req, res) => {
+  try {
+    const { name, email, phone, aadhaar, position, address, salary, joiningDate, status, profilePhoto } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !phone || !aadhaar) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, phone, and Aadhaar number are required',
+      });
+    }
+
+    // Check if email already exists
+    const existingEmployee = await Employee.findOne({ where: { email } });
+    if (existingEmployee) {
+      return res.status(400).json({
+        success: false,
+        message: 'Employee with this email already exists',
+      });
+    }
+
+    // Check if Aadhaar already exists
+    const aadhaarExists = await Employee.findOne({ where: { aadhaar } });
+    if (aadhaarExists) {
+      return res.status(400).json({
+        success: false,
+        message: 'Employee with this Aadhaar number already exists',
+      });
+    }
+
+    // Create new employee
+    const employee = await Employee.create({
+      employerId: req.user.id,
+      name,
+      email,
+      phone,
+      aadhaar,
+      position,
+      address,
+      salary,
+      joiningDate,
+      status: status || 'active',
+      profilePhoto,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Employee created successfully',
+      data: employee,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// Update employee (admin only)
+export const updateEmployee = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const { name, phone, position, address, salary, joiningDate, status, profilePhoto } = req.body;
+
+    const employee = await Employee.findByPk(employeeId);
+    if (!employee) {
+      return res.status(404).json({ success: false, message: 'Employee not found' });
+    }
+
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (phone) updateData.phone = phone;
+    if (position) updateData.position = position;
+    if (address) updateData.address = address;
+    if (salary) updateData.salary = salary;
+    if (joiningDate) updateData.joiningDate = joiningDate;
+    if (status) updateData.status = status;
+    if (profilePhoto) updateData.profilePhoto = profilePhoto;
+
+    await employee.update(updateData);
+
+    res.json({
+      success: true,
+      message: 'Employee updated successfully',
+      data: employee,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};

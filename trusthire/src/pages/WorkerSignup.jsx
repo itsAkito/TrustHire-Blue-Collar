@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useAlert } from '../hooks/useAlert';
 import { authService } from '../services/api';
 
 const WorkerSignup = () => {
@@ -18,6 +19,7 @@ const WorkerSignup = () => {
   const [success, setSuccess] = useState('');
   const [resendTimer, setResendTimer] = useState(0);
   const { login } = useAuth();
+  const { showSuccess, showError, showWarning } = useAlert();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -31,23 +33,23 @@ const WorkerSignup = () => {
 
   const validateForm = () => {
     if (!formData.name || !formData.email || !formData.phone || !formData.password) {
-      setError('All fields are required');
+      showError('All fields are required', 'Validation Error');
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      showError('Passwords do not match', 'Password Mismatch');
       return false;
     }
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      showError('Password must be at least 6 characters', 'Password Too Short');
       return false;
     }
     if (!/^\d{10}$/.test(formData.phone)) {
-      setError('Phone number must be 10 digits');
+      showError('Phone number must be 10 digits', 'Invalid Phone');
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('Invalid email address');
+      showError('Invalid email address', 'Invalid Email');
       return false;
     }
     return true;
@@ -70,11 +72,14 @@ const WorkerSignup = () => {
         role: 'worker',
       });
 
+      showSuccess('Registration successful! Check your email for OTP.', 'Registration Complete');
       setSuccess('Registration successful! Check your email for OTP.');
       setStep(2);
       startResendTimer();
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      const errorMsg = err.response?.data?.message || 'Registration failed. Please try again.';
+      setError(errorMsg);
+      showError(errorMsg, 'Registration Failed');
     } finally {
       setLoading(false);
     }
@@ -99,9 +104,12 @@ const WorkerSignup = () => {
     try {
       await authService.resendOTP(formData.email);
       setSuccess('OTP resent to your email');
+      showSuccess('OTP resent successfully!', 'OTP Resent');
       startResendTimer();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to resend OTP');
+      const errorMsg = err.response?.data?.message || 'Failed to resend OTP';
+      setError(errorMsg);
+      showError(errorMsg, 'Resend Failed');
     } finally {
       setLoading(false);
     }
@@ -110,7 +118,7 @@ const WorkerSignup = () => {
   const handleOTPVerification = async (e) => {
     e.preventDefault();
     if (!otp || otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP');
+      showError('Please enter a valid 6-digit OTP', 'Invalid OTP');
       return;
     }
 
@@ -130,10 +138,13 @@ const WorkerSignup = () => {
       });
 
       login(loginResponse.data.user, loginResponse.data.token, 'worker');
+      showSuccess('Account verified and logged in successfully!', 'Welcome!');
       setSuccess('Account verified and logged in successfully!');
-      setTimeout(() => navigate('/user-home'), 1500);
+      setTimeout(() => navigate('/'), 1500);
     } catch (err) {
-      setError(err.response?.data?.message || 'OTP verification failed. Please try again.');
+      const errorMsg = err.response?.data?.message || 'OTP verification failed. Please try again.';
+      setError(errorMsg);
+      showError(errorMsg, 'Verification Failed');
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useAlert } from '../hooks/useAlert';
 import { authService } from '../services/api';
 import Button from '../components/Button';
 
@@ -20,6 +21,7 @@ const EmployerSignup = () => {
   const [success, setSuccess] = useState('');
   const [resendTimer, setResendTimer] = useState(0);
   const { login } = useAuth();
+  const { showSuccess, showError } = useAlert();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -33,23 +35,23 @@ const EmployerSignup = () => {
 
   const validateForm = () => {
     if (!formData.name || !formData.email || !formData.phone || !formData.companyName || !formData.password) {
-      setError('All fields are required');
+      showError('All fields are required', 'Validation Error');
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      showError('Passwords do not match', 'Password Mismatch');
       return false;
     }
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      showError('Password must be at least 6 characters', 'Password Too Short');
       return false;
     }
     if (!/^\d{10}$/.test(formData.phone)) {
-      setError('Phone number must be 10 digits');
+      showError('Phone number must be 10 digits', 'Invalid Phone');
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('Invalid email address');
+      showError('Invalid email address', 'Invalid Email');
       return false;
     }
     return true;
@@ -73,11 +75,14 @@ const EmployerSignup = () => {
         companyName: formData.companyName,
       });
 
+      showSuccess('Registration successful! Check your email for OTP.', 'Registration Complete');
       setSuccess('Registration successful! Check your email for OTP.');
       setStep(2);
       startResendTimer();
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      const errorMsg = err.response?.data?.message || 'Registration failed. Please try again.';
+      setError(errorMsg);
+      showError(errorMsg, 'Registration Failed');
     } finally {
       setLoading(false);
     }

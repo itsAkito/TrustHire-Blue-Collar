@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useAlert } from '../hooks/useAlert';
 import { authService } from '../services/api';
 
 const LoginAdmin = () => {
@@ -11,6 +12,7 @@ const LoginAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
+  const { showSuccess, showError } = useAlert();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -33,9 +35,12 @@ const LoginAdmin = () => {
         password: formData.password,
       });
       login(response.data.user, response.data.token, 'admin');
+      showSuccess('Admin login successful!', 'Welcome Admin');
       navigate('/admin-dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      const errorMsg = err.response?.data?.message || 'Invalid credentials. Please try again.';
+      setError(errorMsg);
+      showError(errorMsg, 'Login Failed');
     } finally {
       setLoading(false);
     }

@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 
 // Import routes
 import userRoutes from './routes/userRoutes.js';
+import workerRoutes from './routes/workerRoutes.js';
 import employerRoutes from './routes/employerRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
@@ -99,6 +100,7 @@ app.get('/api', (req, res) => {
 
 // API Routes
 app.use('/api/users', userRoutes);
+app.use('/api/workers', workerRoutes);
 app.use('/api/employers', employerRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);

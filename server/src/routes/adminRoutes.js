@@ -11,6 +11,8 @@ import {
   deleteEmployee,
   getAdminProfile,
   updateAdminProfile,
+  createEmployee,
+  updateEmployee,
 } from '../controllers/adminController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
@@ -27,6 +29,8 @@ router.get('/applications', authMiddleware, getAllApplications);
 router.get('/employees', authMiddleware, getAllEmployees);
 router.get('/profile', authMiddleware, getAdminProfile);
 router.put('/profile', authMiddleware, updateAdminProfile);
+router.post('/employees', authMiddleware, createEmployee);
+router.put('/employees/:employeeId', authMiddleware, updateEmployee);
 
 // Delete routes
 router.delete('/users/:userId', authMiddleware, deleteUser);

@@ -168,19 +168,27 @@ export const login = async (req, res) => {
 
     const user = await User.findOne({ where: { email: value.email } });
     if (!user) {
-      return res.status(401).json({ success: false, message: ERROR_MESSAGES.INVALID_CREDENTIALS });
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid credentials. Account not found.',
+        debug: process.env.NODE_ENV === 'development' ? `No user found with email: ${value.email}` : undefined
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(value.password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ success: false, message: ERROR_MESSAGES.INVALID_CREDENTIALS });
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid credentials. Please check your email and password.',
+      });
     }
 
     if (!user.otpVerified) {
       return res.status(403).json({
         success: false,
-        message: 'Please verify your email first',
+        message: 'Please verify your email first. Check your email for the OTP.',
         requiresVerification: true,
+        email: user.email,
       });
     }
 

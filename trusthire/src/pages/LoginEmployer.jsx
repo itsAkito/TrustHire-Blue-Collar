@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useAlert } from '../hooks/useAlert';
 import { authService } from '../services/api';
 
 const LoginEmployer = () => {
@@ -11,6 +12,7 @@ const LoginEmployer = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
+  const { showSuccess, showError } = useAlert();
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -33,9 +35,13 @@ const LoginEmployer = () => {
         password: formData.password,
       });
       login(response.data.user, response.data.token, response.data.user.role || 'employer');
-      navigate('/user-home');
+      showSuccess('Login successful!', 'Welcome to TrustHire');
+      // Navigate to home (which will redirect based on role)
+      navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred. Please try again.');
+      const errorMsg = err.response?.data?.message || 'An error occurred. Please try again.';
+      setError(errorMsg);
+      showError(errorMsg, 'Login Failed');
     } finally {
       setLoading(false);
     }

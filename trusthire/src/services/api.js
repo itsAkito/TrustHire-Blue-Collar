@@ -69,6 +69,23 @@ export const authService = {
 
 export const validateToken = (token) => authService.validateToken(token);
 
+// Admin Services
+export const adminService = {
+  login: (credentials) => api.post('/admin/login', credentials),
+  getDashboardStats: () => api.get('/admin/dashboard/stats'),
+  getAllUsers: (params) => api.get('/admin/users', { params }),
+  getAllJobs: (params) => api.get('/admin/jobs', { params }),
+  getAllApplications: (params) => api.get('/admin/applications', { params }),
+  getAllEmployees: (params) => api.get('/admin/employees', { params }),
+  createEmployee: (employeeData) => api.post('/admin/employees', employeeData),
+  updateEmployee: (employeeId, employeeData) => api.put(`/admin/employees/${employeeId}`, employeeData),
+  deleteEmployee: (employeeId) => api.delete(`/admin/employees/${employeeId}`),
+  deleteUser: (userId) => api.delete(`/admin/users/${userId}`),
+  deleteJob: (jobId) => api.delete(`/admin/jobs/${jobId}`),
+  getAdminProfile: () => api.get('/admin/profile'),
+  updateAdminProfile: (profileData) => api.put('/admin/profile', profileData),
+};
+
 // Mock data for development
 const MOCK_JOBS = [
   {
@@ -148,6 +165,7 @@ export const workerService = {
       };
     }
   },
+  createWorkerProfile: (formData) => api.post('/workers/profile', formData),
   updateProfile: (formData) => api.put('/workers/profile', formData),
   getAvailableJobs: async (filters) => {
     try {
