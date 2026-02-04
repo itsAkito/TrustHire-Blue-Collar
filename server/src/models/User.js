@@ -48,6 +48,10 @@ const User = sequelize.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    companyName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     rating: {
       type: DataTypes.FLOAT,
       defaultValue: 0,

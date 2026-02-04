@@ -14,14 +14,16 @@ import uploadMiddleware from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
+// Public routes - no authentication required
+router.get('/jobs/available', getAvailableJobs);
+router.get('/jobs/search', searchJobs);
+
 // Protected routes - require authentication
 router.get('/profile', authMiddleware, getWorkerProfile);
 router.post('/profile', authMiddleware, uploadMiddleware.single('profilePhoto'), createWorkerProfile);
 router.put('/profile', authMiddleware, uploadMiddleware.single('profilePhoto'), updateWorkerProfile);
 
-// Job related routes
-router.get('/jobs/available', authMiddleware, getAvailableJobs);
-router.get('/jobs/search', authMiddleware, searchJobs);
+// Job related routes - protected
 router.post('/jobs/:jobId/apply', authMiddleware, applyForJob);
 router.get('/applications', authMiddleware, getApplications);
 

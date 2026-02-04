@@ -1,55 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useGeolocation } from '../hooks/useGeolocation';
 import { useAlert } from '../hooks/useAlert';
 import { workerService } from '../services/api';
-import Card from '../components/Card';
-import Button from '../components/Button';
+import { Search, MapPin, Briefcase, DollarSign, Clock, Star } from 'lucide-react';
+import Footer from '../components/Footer';
+import './Home.css';
 
 const Home = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { location, getLocation } = useGeolocation();
-  const { showSuccess, showError } = useAlert();
+  const { showError, showInfo } = useAlert();
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     jobType: '',
     location: '',
   });
+  const [featuredWorkers] = useState([
+    {
+      id: 1,
+      name: 'Raj Kumar',
+      profilePhoto: '/Gemini_Generated_Image_6zccc26zccc26zcc.png',
+      skills: ['Electrical', 'Wiring', 'Installation'],
+      reviews: 0,
+      experience: 8,
+      bio: 'Expert electrical technician with 8+ years experience',
+    },
+    {
+      id: 2,
+      name: 'Priya Singh',
+      profilePhoto: '/Gemini_Generated_Image_e670sre670sre670.png',
+      skills: ['Plumbing', 'Repairs', 'Installation'],
+      reviews: 0,
+      experience: 6,
+      bio: 'Certified plumber with 6 years of professional experience',
+    },
+    {
+      id: 3,
+      name: 'Amit Patel',
+      profilePhoto: '/Gemini_Generated_Image_jiy1wsjiy1wsjiy1.png',
+      skills: ['Carpentry', 'Woodwork', 'Furniture'],
+      reviews: 0,
+      experience: 10,
+      bio: 'Master carpenter specializing in custom furniture & renovations',
+    },
+    {
+      id: 4,
+      name: 'Sneha Sharma',
+      profilePhoto: '/Gemini_Generated_Image_lwamuelwamuelwam.png',
+      skills: ['Painting', 'Interior Design', 'Decorating'],
+      reviews: 0,
+      experience: 5,
+      bio: 'Professional painter with expertise in modern interior design',
+    },
+  ]);
 
-  // Redirect workers to their home page if not showing jobs
   useEffect(() => {
-    if (user && user.role === 'worker' && !searchTerm && !filters.jobType && !filters.location) {
-      // Worker logged in but not searching - show them a welcome message
-      // Allow them to browse jobs or go to profile
+    if (user?.role === 'worker') {
+      fetchJobs();
     }
-  }, [user]);
+  }, [searchTerm, filters, user]);
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await workerService.getAvailableJobs({
-          search: searchTerm,
-          ...filters,
-        });
-        setJobs(response.data);
-      } catch (err) {
-        console.error('Failed to fetch jobs:', err);
-        showError('Failed to fetch jobs', 'Error');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchJobs();
-  }, [searchTerm, filters, showError]);
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const response = await workerService.getAvailableJobs({
+        search: searchTerm,
+        ...filters,
+      });
+      setJobs(response.data || []);
+    } catch (err) {
+      console.error('Failed to fetch jobs:', err);
+      showError('Failed to load jobs', 'Error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setLoading(true);
   };
 
   const handleFilterChange = (e) => {
@@ -58,11 +89,6 @@ const Home = () => {
       ...prev,
       [name]: value,
     }));
-    setLoading(true);
-  };
-
-  const handleGetLocation = () => {
-    getLocation();
   };
 
   const handleApplyJob = async (jobId) => {
@@ -73,181 +99,218 @@ const Home = () => {
 
     try {
       await workerService.applyForJob(jobId);
-      showSuccess('Successfully applied for the job!', 'Application Sent');
+      showInfo('Successfully applied for the job!', 'Application Sent');
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to apply for job';
-      showError(errorMsg, 'Application Failed');
+      showError(err.response?.data?.message || 'Failed to apply for job', 'Application Failed');
     }
   };
 
   return (
-    <div className="w-full">
-      {/* Hero Section */}
-      {!user && (
-        <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 md:py-24">
-          <div className="max-w-6xl mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Welcome to TrustHire</h1>
-            <p className="text-lg md:text-xl mb-8 opacity-90">
-              Connect skilled workers with employers seeking their expertise
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                variant="primary"
-                size="large"
-                onClick={() => navigate('/login')}
-              >
-                Get Started
-              </Button>
-              <Button
-                variant="outline"
-                size="large"
-                onClick={() => navigate('/login')}
-              >
-                Learn More
-              </Button>
+    <>
+      <div className="goth-body min-h-screen ">
+        {/* Navigation */}
+        {/* <nav className="goth-nav">
+          <div className="goth-nav-content">
+            <div className="flex items-center gap-12">
+              <div className="goth-logo cursor-pointer" onClick={() => navigate('/')}>TRUSTHIRE</div>
+              <div className="goth-nav-links hidden md:flex">
+                <a href="#portfolio">Portfolio</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+              </div>
+            </div>
+            <button className="goth-contact-btn">Contact Us</button>
+          </div>
+        </nav> */}
+
+        {/* Hero Section */}
+        <section className="goth-hero">
+          <div className="goth-hero-container">
+            {/* Left Side Image Grid */}
+            <div className="goth-left-images">
+              <img src="/Gemini_Generated_Image_e670sre670sre670.png" alt="Detail 1" className="goth-left-img-1 hover:scale-105 transition-transform duration-500" />
+              <img src="/Gemini_Generated_Image_jiy1wsjiy1wsjiy1.png" alt="Detail 2" className="goth-left-img-2 hover:scale-105 transition-transform duration-500" />
+            </div>
+
+            {/* Left Title */}
+            <h1 className="goth-title-primary-left">TRUST</h1>
+
+            {/* Center Image - Main Focus */}
+            {/* <div className="goth-center-image-wrapper">
+              <img src="/Miximage.png" alt="Professional" className="goth-center-image hover:scale-105 transition-transform duration-500 cursor-pointer w-90 h-96" />
+            </div> */}
+
+            {/* Right Title */}
+            <h1 className="goth-title-primary-right">HIRE</h1>
+
+            {/* Right Side Images */}
+            <div className="goth-right-images">
+              <img src="/Gemini_Generated_Image_jiy1wsjiy1wsjiy1.png" alt="Detail 3" className="goth-right-img-1 hover:scale-105 transition-transform duration-500" />
+              <img src="/Gemini_Generated_Image_e670sre670sre670.png" alt="Detail 4" className="goth-right-img-2 hover:scale-105 transition-transform duration-500" />
+            </div>
+
+            {/* Tagline */}
+            <div className="goth-tagline">
+              <p>WORKFORCE SOLUTIONS FOR BLUE-COLLAR PROFESSIONALS, EMPLOYERS, AND ENTERPRISES.</p>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="goth-cta-buttons">
+              <button onClick={() => navigate('/worker-signup')} className="goth-btn goth-btn-outline">Get Started</button>
+              <button onClick={() => navigate('/employer-signup')} className="goth-btn goth-btn-filled">Post Job</button>
             </div>
           </div>
         </section>
-      )}
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-secondary mb-6">
-            {user ? 'Available Jobs' : 'Find Jobs Near You'}
-          </h2>
+        {/* Search and Filter Section - Only for Workers */}
+        {user?.role === 'worker' && (
+          <section className="goth-search-section">
+            <div className="goth-search-container">
+              <div className="goth-search-row">
+                <div className="relative">
+                  <Search className="absolute left-4 top-3 h-5 w-5 text-gray-600" />
+                  <input
+                    type="text"
+                    placeholder="Search opportunities..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="goth-search-input pl-12"
+                  />
+                </div>
+              </div>
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Search jobs by title or skill..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-blue-200 transition-all"
-            />
+              <div className="goth-search-row two-col">
+                <div>
+                  <label className="block text-sm mb-2 text-gray-400">Job Type</label>
+                  <select
+                    name="jobType"
+                    value={filters.jobType}
+                    onChange={handleFilterChange}
+                    className="goth-select"
+                  >
+                    <option value="">All Types</option>
+                    <option value="full-time">Full-time</option>
+                    <option value="part-time">Part-time</option>
+                    <option value="contract">Contract</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm mb-2 text-gray-400">Location</label>
+                  <div className="relative">
+                    <MapPin className="absolute right-4 top-3 h-5 w-5 text-gray-600" />
+                    <input
+                      type="text"
+                      name="location"
+                      placeholder="City or region"
+                      value={filters.location}
+                      onChange={handleFilterChange}
+                      className="goth-search-input pr-10"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <select
-                name="jobType"
-                value={filters.jobType}
-                onChange={handleFilterChange}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-blue-200 transition-all"
-              >
-                <option value="">All Job Types</option>
-                <option value="full-time">Full-time</option>
-                <option value="part-time">Part-time</option>
-                <option value="contract">Contract</option>
-              </select>
-
-              <input
-                type="text"
-                name="location"
-                placeholder="Location"
-                value={filters.location}
-                onChange={handleFilterChange}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-blue-200 transition-all"
-              />
-
-              {!user && (
-                <Button
-                  variant="secondary"
-                  onClick={handleGetLocation}
-                  className="whitespace-nowrap"
-                >
-                  📍 Use My Location
-                </Button>
+        {/* Jobs Grid Section - Only for Workers */}
+        {user?.role === 'worker' && (
+          <section className="goth-section">
+            <div className="goth-section-container">
+              {loading ? (
+                <div className="text-center py-16">
+                  <div className="inline-block text-2xl">Loading...</div>
+                </div>
+              ) : jobs.length > 0 ? (
+                <div className="goth-grid">
+                  {jobs.map((job) => (
+                    <div key={job.id} className="goth-card">
+                      <h3 className="goth-card-title">{job.title}</h3>
+                      <p className="goth-card-text">{job.employer?.name || 'Company'}</p>
+                      <div className="goth-card-meta">
+                        <span>📍 {job.location || 'Remote'}</span>
+                        <span>💼 {job.jobType || 'Full-time'}</span>
+                      </div>
+                      {job.salary && <p className="goth-card-text">💰 ${Number(job.salary).toLocaleString()}/mo</p>}
+                      <button onClick={() => handleApplyJob(job.id)} className="goth-card-button">Apply Now</button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16">
+                  <h3 className="text-xl text-gray-400">No opportunities found</h3>
+                  <button onClick={() => { setSearchTerm(''); setFilters({ jobType: '', location: '' }); }} className="goth-cta-button mt-4">Clear Filters</button>
+                </div>
               )}
             </div>
+          </section>
+        )}
 
-            {location && (
-              <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-700">
-                📍 Your location: {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
+        {/* Featured Workers Section - Only for Non-authenticated Users */}
+        {!user && (
+          <section className="goth-section">
+            <div className="goth-section-container">
+              <h2 className="goth-section-title">Featured Professionals</h2>
+              <p className="goth-section-subtitle">Connect with highly-rated, verified workers</p>
+
+              <div className="goth-grid">
+                {featuredWorkers.map((worker) => (
+                  <div key={worker.id} className="goth-card">
+                    <img src={worker.profilePhoto} alt={worker.name} className="goth-card-image" />
+                    <h3 className="goth-card-title">{worker.name}</h3>
+                    <p className="goth-card-text">{worker.bio}</p>
+                    <div className="goth-card-meta">
+                      <span>📊 {worker.reviews} reviews</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mb-3">{worker.experience} years experience</p>
+                    <button onClick={() => navigate('/login')} className="goth-card-button">View Profile</button>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* Jobs Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading ? (
-            <div className="col-span-full flex justify-center items-center py-16 text-lg text-gray-500">
-              Loading jobs...
             </div>
-          ) : jobs.length > 0 ? (
-            jobs.map((job) => (
-              <Card
-                key={job.id || job._id}
-                title={job.title}
-                description={job.location}
-                className="flex flex-col h-full"
-              >
-                <div className="flex-1 space-y-2 mb-4">
-                  <div className="flex justify-between items-start">
-                    <span className="font-semibold text-gray-700">Type:</span>
-                    <span className="text-gray-600">{job.jobType}</span>
-                  </div>
-                  <div className="flex justify-between items-start">
-                    <span className="font-semibold text-gray-700">Salary:</span>
-                    <span className="text-gray-600">{job.salary || 'Negotiable'}</span>
-                  </div>
-                  <div className="flex justify-between items-start">
-                    <span className="font-semibold text-gray-700">Company:</span>
-                    <span className="text-gray-600">{job.employer?.name || 'Company'}</span>
-                  </div>
-                  <p className="text-gray-600 text-sm mt-3">{job.description}</p>
+          </section>
+        )}
+
+        {/* Features Section - Only for Non-authenticated Users */}
+        {!user && (
+          <section className="goth-section">
+            <div className="goth-section-container">
+              <h2 className="goth-section-title text-center mb-16">Why Choose TrustHire?</h2>
+              <div className="goth-grid">
+                <div className="goth-card">
+                  <h3 className="goth-card-title text-center">Verified Professionals</h3>
+                  <p className="goth-card-text text-center">Work with trusted and verified blue-collar professionals</p>
                 </div>
-
-                <Button
-                  variant="primary"
-                  fullWidth
-                  onClick={() => handleApplyJob(job.id || job._id)}
-                  className="mt-auto"
-                >
-                  Apply Now
-                </Button>
-              </Card>
-            ))
-          ) : (
-            <Card className="col-span-full text-center py-12">
-              <p className="text-gray-600">
-                No jobs found. Try adjusting your search or filters.
-              </p>
-            </Card>
-          )}
-        </div>
-      </div>
-
-      {/* Features Section */}
-      {!user && (
-        <section className="bg-gradient-to-b from-gray-50 to-white py-16 md:py-24 mt-8">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center text-secondary mb-12">
-              Why Choose TrustHire?
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card title="Easy Job Search" className="text-center">
-                <p className="text-gray-600">
-                  Find jobs that match your skills and location with our advanced search filters.
-                </p>
-              </Card>
-              <Card title="Safe Transactions" className="text-center">
-                <p className="text-gray-600">
-                  Secure payment and rating system to ensure trust between workers and employers.
-                </p>
-              </Card>
-              <Card title="Real-time Updates" className="text-center">
-                <p className="text-gray-600">
-                  Get notified instantly about new job opportunities and application updates.
-                </p>
-              </Card>
+                <div className="goth-card">
+                  <h3 className="goth-card-title text-center">Fair Compensation</h3>
+                  <p className="goth-card-text text-center">Competitive rates and transparent payment terms for all</p>
+                </div>
+                <div className="goth-card">
+                  <h3 className="goth-card-title text-center">Career Growth</h3>
+                  <p className="goth-card-text text-center">Build your professional profile and grow your network</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </section>
-      )}
-    </div>
+          </section>
+        )}
+
+        {/* CTA Section - Only for Non-authenticated Users */}
+        {!user && (
+          <section className="goth-section">
+            <div className="goth-section-container text-center">
+              <h2 className="goth-section-title">Ready to Get Started?</h2>
+              <p className="goth-section-subtitle mb-8">Join thousands of skilled professionals on TrustHire</p>
+              <div className="flex gap-4 justify-center flex-wrap">
+                <button onClick={() => navigate('/worker-signup')} className="goth-cta-button primary">Sign Up as Worker</button>
+                <button onClick={() => navigate('/employer-signup')} className="goth-cta-button">Post a Job</button>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
+      <Footer />
+    </>
   );
 };
 
 export default Home;
-
-

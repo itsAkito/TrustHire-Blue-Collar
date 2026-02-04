@@ -77,6 +77,7 @@ export const adminService = {
   getAllJobs: (params) => api.get('/admin/jobs', { params }),
   getAllApplications: (params) => api.get('/admin/applications', { params }),
   getAllEmployees: (params) => api.get('/admin/employees', { params }),
+  getNotifications: (params) => api.get('/notifications', { params }),
   createEmployee: (employeeData) => api.post('/admin/employees', employeeData),
   updateEmployee: (employeeId, employeeData) => api.put(`/admin/employees/${employeeId}`, employeeData),
   deleteEmployee: (employeeId) => api.delete(`/admin/employees/${employeeId}`),
@@ -169,7 +170,7 @@ export const workerService = {
   updateProfile: (formData) => api.put('/workers/profile', formData),
   getAvailableJobs: async (filters) => {
     try {
-      return await api.get('/jobs', { params: filters });
+      return await api.get('/workers/jobs/available', { params: filters });
     } catch (error) {
       return {
         data: MOCK_JOBS.filter(job => {

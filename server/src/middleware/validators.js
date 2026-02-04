@@ -5,6 +5,7 @@ export const validateRegister = (data) => {
     name: Joi.string().min(3).max(50).required(),
     email: Joi.string().email().required(),
     phone: Joi.string().allow(''),
+    companyName: Joi.string().allow(''),
     password: Joi.string().min(6).required(),
     role: Joi.string().valid('worker', 'employer').required(),
   });

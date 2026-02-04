@@ -3,29 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { validateRegister, validateLogin } from '../middleware/validators.js';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../config/constants.js';
-
-// Generate OTP
-const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
-
-// Send OTP email (mock implementation - replace with actual email service)
-const sendOTPEmail = async (email, otp) => {
-  try {
-    // TODO: Integrate with Nodemailer or other email service
-    console.log(`OTP for ${email}: ${otp}`);
-    // Example with nodemailer:
-    // await transporter.sendMail({
-    //   to: email,
-    //   subject: 'Your OTP for Email Verification',
-    //   html: `Your OTP is: ${otp}. Valid for 10 minutes.`
-    // });
-    return true;
-  } catch (error) {
-    console.error('Error sending OTP email:', error);
-    return false;
-  }
-};
+import { generateOTP, sendOTPEmail, sendOTPSMS, sendWelcomeEmail } from '../services/otpService.js';
 
 // Register user
 export const register = async (req, res) => {
@@ -54,16 +32,22 @@ export const register = async (req, res) => {
       otpExpires,
     });
 
-    // Send OTP email
-    await sendOTPEmail(user.email, otp);
+    // Send OTP via email
+    await sendOTPEmail(user.email, otp, user.name);
+
+    // Send OTP via SMS if phone number is provided
+    if (user.phone) {
+      await sendOTPSMS(user.phone, otp, user.name);
+    }
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully. Please verify your email with OTP.',
+      message: 'User registered successfully. Please verify your email/phone with OTP.',
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         role: user.role,
       },
     });
@@ -106,6 +90,9 @@ export const verifyOTP = async (req, res) => {
       otpExpires: null,
     });
 
+    // Send welcome email
+    await sendWelcomeEmail(user.email, user.name);
+
     res.json({
       success: true,
       message: 'Email verified successfully',
@@ -113,6 +100,7 @@ export const verifyOTP = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
         role: user.role,
       },
     });
@@ -125,7 +113,7 @@ export const verifyOTP = async (req, res) => {
 // Resend OTP
 export const resendOTP = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, method = 'email' } = req.body;
 
     if (!email) {
       return res.status(400).json({ success: false, message: 'Email is required' });
@@ -145,13 +133,20 @@ export const resendOTP = async (req, res) => {
 
     await user.update({ otp, otpExpires });
 
-    // Send OTP email
-    await sendOTPEmail(user.email, otp);
-
-    res.json({
-      success: true,
-      message: 'OTP sent successfully to your email',
-    });
+    // Send OTP via selected method
+    if (method === 'sms' && user.phone) {
+      await sendOTPSMS(user.phone, otp, user.name);
+      res.json({
+        success: true,
+        message: 'OTP sent successfully to your phone',
+      });
+    } else {
+      await sendOTPEmail(user.email, otp, user.name);
+      res.json({
+        success: true,
+        message: 'OTP sent successfully to your email',
+      });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Server error' });

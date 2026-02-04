@@ -22,6 +22,7 @@ export const register = async (req, res) => {
       name: value.name,
       email: value.email,
       phone: value.phone || null,
+      companyName: value.companyName || null,
       password: hashedPassword,
       role: value.role,
     });
@@ -40,6 +41,7 @@ export const register = async (req, res) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        companyName: user.companyName,
         role: user.role,
       },
       token,
@@ -106,6 +108,7 @@ export const validateToken = (req, res) => {
         name: user.name,
         email: user.email,
         phone: user.phone,
+        companyName: user.companyName,
         role: user.role,
       },
     });

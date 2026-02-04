@@ -43,20 +43,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-500 to-purple-600 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-2xl p-8 space-y-6">
+        <div className="bg-slate-800/50 border border-slate-700 rounded-lg shadow-2xl p-8 space-y-6 backdrop-blur-sm">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
-            <p className="text-gray-600">Sign in to your TrustHire account</p>
+            <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
+            <p className="text-slate-300">Sign in to your TrustHire account</p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Email Address</label>
+              <label className="block text-sm font-semibold text-slate-200">Email Address</label>
               <input
                 type="email"
                 name="email"
@@ -64,13 +64,13 @@ const Login = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition"
               />
             </div>
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Password</label>
+              <label className="block text-sm font-semibold text-slate-200">Password</label>
               <input
                 type="password"
                 name="password"
@@ -78,13 +78,13 @@ const Login = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition"
               />
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-900/30 border border-red-700 text-red-300 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -93,7 +93,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </button>

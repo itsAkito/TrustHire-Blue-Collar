@@ -37,11 +37,25 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 sequelize
   .authenticate()
   .then(() => {
-    console.log('✓ Neon PostgreSQL connection established successfully');
+    console.log('✓ PostgreSQL connection established successfully');
   })
   .catch((err) => {
-    console.error('✗ Unable to connect to Neon PostgreSQL:', err.message);
-    console.error('Please check your DATABASE_URL in .env file');
+    console.error('✗ Database Connection Error:', err.message);
+    console.error('');
+    console.error('TROUBLESHOOTING STEPS:');
+    console.error('1. If using Neon PostgreSQL:');
+    console.error('   - Visit https://console.neon.tech');
+    console.error('   - Verify your database is active');
+    console.error('   - Copy the connection string and update .env');
+    console.error('');
+    console.error('2. If you prefer local PostgreSQL (development):');
+    console.error('   - Install PostgreSQL locally');
+    console.error('   - Create database: createdb trusthire');
+    console.error('   - Update .env: DATABASE_URL=postgresql://postgres:password@localhost:5432/trusthire');
+    console.error('   - Restart the server');
+    console.error('');
+    console.error('3. Current DATABASE_URL:', process.env.DATABASE_URL ? '***' : 'NOT SET');
+    console.error('');
   });
 
 export default sequelize;

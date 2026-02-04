@@ -12,6 +12,7 @@ import employerRoutes from './routes/employerRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 // Import models
 import User from './models/User.js';
@@ -19,6 +20,7 @@ import Job from './models/Job.js';
 import Application from './models/Application.js';
 import Review from './models/Review.js';
 import Employee from './models/Employee.js';
+import Notification from './models/Notification.js';
 
 dotenv.config();
 
@@ -105,6 +107,7 @@ app.use('/api/employers', employerRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
