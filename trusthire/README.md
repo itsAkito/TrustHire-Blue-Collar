@@ -180,6 +180,6 @@ npm run build
 For detailed information, please refer to the documentation files listed above.
 
 **Happy coding! 🎉**
-<<<<<<<
+<<<<<<
 =======
 >>>>>>> 7b998c4bf8830d11e446f79e1aad3bba7f2d9861
