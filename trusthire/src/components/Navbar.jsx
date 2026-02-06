@@ -28,15 +28,6 @@ const Navbar = () => {
 
           {user ? (
             <>
-              {user.role === 'worker' && (
-                <>
-                  <Link to="/worker-profile" className="text-gray-300 hover:text-white transition-colors flex items-center gap-2 font-medium text-sm">
-                    <User className="h-4 w-4" />
-                    My Profile
-                  </Link>
-                </>
-              )}
-
               {user.role === 'employer' && (
                 <Link to="/employee-dashboard" className="text-gray-300 hover:text-white transition-colors flex items-center gap-2 font-medium text-sm">
                   <span>📊</span>
