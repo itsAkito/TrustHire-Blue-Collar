@@ -7,7 +7,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import UserHome from './pages/UserHome';
 import RoleSelection from './pages/RoleSelection';
-import Login from './pages/Login';
+import UnifiedLogin from './pages/UnifiedLogin';
 import LoginAdmin from './pages/LoginAdmin';
 import LoginWorker from './pages/LoginWorker';
 import LoginEmployer from './pages/LoginEmployer';
@@ -44,7 +44,8 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/role-selection" element={<RoleSelection />} />
-          <Route path="/login" element={<Login />} />
+          {/* Unified Login with Automatic Role Detection */}
+          <Route path="/login" element={<UnifiedLogin />} />
           <Route path="/login-admin" element={<LoginAdmin />} />
           <Route path="/login-worker" element={<LoginWorker />} />
           <Route path="/login-employer" element={<LoginEmployer />} />
@@ -72,8 +73,17 @@ function AppContent() {
           <Route
             path="/employee-dashboard"
             element={
-              <ProtectedRoute requiredRole="employer">
+              <ProtectedRoute>
                 <EmployeeDashboard />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/worker-dashboard"
+            element={
+              <ProtectedRoute requiredRole="worker">
+                <WorkerProfile />
               </ProtectedRoute>
             }
           />
