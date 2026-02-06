@@ -7,11 +7,20 @@ const RoleSelection = () => {
   const roles = [
     {
       id: 'user',
-      title: 'User / Employee',
-      description: 'Login or join as an employee/worker.',
-      icon: '👤',
+      title: 'Regular User / Employer',
+      description: 'Post jobs, manage applications, and find workers.',
+      icon: '👔',
       gradient: 'from-blue-500 to-cyan-500',
-      loginPath: '/login-worker',
+      loginPath: '/login',
+      signupPath: '/signup',
+    },
+    {
+      id: 'worker',
+      title: 'Blue Collar Worker',
+      description: 'Find jobs, apply to opportunities, and build your career.',
+      icon: '👷',
+      gradient: 'from-green-500 to-emerald-500',
+      loginPath: '/worker-login',
       signupPath: '/worker-signup',
     },
     {
@@ -30,11 +39,11 @@ const RoleSelection = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-white mb-4">Welcome to TrustHire</h1>
-          <p className="text-xl text-gray-300">Choose your role to get started</p>
+          <p className="text-xl text-gray-300">Choose how you want to connect</p>
         </div>
 
         {/* Role Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {roles.map((role) => (
             <div
               key={role.id}
@@ -47,7 +56,6 @@ const RoleSelection = () => {
                     <h2 className="text-2xl font-bold text-white text-center">{role.title}</h2>
                     <p className="text-white text-center text-sm mt-3 opacity-90">{role.description}</p>
                   </div>
-                  
                   {/* Action Buttons */}
                   <div className="w-full space-y-2">
                     {role.signupPath && (
