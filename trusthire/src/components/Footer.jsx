@@ -1,11 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, X, BookOpen, Code, Users, Zap, Shield, Smartphone } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, X, BookOpen, Code, Users, Zap, Shield, Smartphone, CheckCircle, AlertCircle, Eye, Lock, FileText } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
 
 const Footer = () => {
+  const { user } = useAuth();
   const [showDocs, setShowDocs] = useState(false);
   const [activeDoc, setActiveDoc] = useState('overview');
+  const [newsletter, setNewsletter] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState({});
   const currentYear = new Date().getFullYear();
+
+  // Newsletter handler
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    if (newsletter.trim()) {
+      setNewsletterStatus({ type: 'success', message: 'Subscribed to job alerts!' });
+      setNewsletter('');
+      setTimeout(() => setNewsletterStatus(null), 3000);
+    }
+  };
+
+  // Role-based action buttons
+  const getActionButtons = () => {
+    if (!user) {
+      // Guest user
+      return [
+        { label: 'Find Jobs', to: '/worker-signup', variant: 'primary', icon: '💼' },
+        { label: 'Post a Job', to: '/employer-signup', variant: 'secondary', icon: '📝' }
+      ];
+    }
+
+    if (user.role === 'worker') {
+      // Worker user
+      return [
+        { label: 'View My Applications', to: '/worker-dashboard', variant: 'primary', icon: '📋' },
+        { label: 'Find More Jobs', to: '/worker-dashboard', variant: 'secondary', icon: '🔍' }
+      ];
+    }
+
+    if (user.role === 'employer' || user.role === 'user') {
+      // Employer user
+      return [
+        { label: 'Post a Job', to: '/employee-dashboard', variant: 'primary', icon: '📝' },
+        { label: 'Find Workers', to: '/employee-dashboard', variant: 'secondary', icon: '👥' }
+      ];
+    }
+
+    if (user.role === 'admin') {
+      // Admin user
+      return [
+        { label: 'Admin Dashboard', to: '/admin-dashboard', variant: 'primary', icon: '⚙️' },
+        { label: 'View Reports', to: '/admin-dashboard', variant: 'secondary', icon: '📊' }
+      ];
+    }
+
+    return [];
+  };
+
+  const actionButtons = getActionButtons();
+
+  // Trust badges with real-time stats
+  const trustBadges = [
+    { icon: '🔒', label: 'Secure Payments', description: 'SSL Encrypted' },
+    { icon: '✅', label: 'Verified Profiles', description: '5000+ Active' },
+    { icon: '⭐', label: 'Quality Assured', description: '4.8/5 Average' },
+    { icon: '🛡️', label: 'Protected Workers', description: 'Dispute Support' }
+  ];
 
   const docs = {
     overview: {
@@ -154,6 +216,24 @@ const Footer = () => {
 
   return (
     <footer className="bg-black text-gray-300 border-t border-gray-800">
+      {/* Trust Badges Bar - High Visibility */}
+      {/* <div className="bg-gradient-to-r from-gray-950 via-gray-900 to-gray-950 border-b border-gray-800 py-8">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {trustBadges.map((badge, idx) => (
+              <div 
+                key={idx}
+                className="bg-gray-800/30 border border-gray-700 rounded-lg p-4 hover:border-blue-500/50 transition-all group"
+              >
+                <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">{badge.icon}</div>
+                <p className="text-white font-semibold text-sm">{badge.label}</p>
+                <p className="text-gray-400 text-xs">{badge.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div> */}
+
       {/* Contact Info Bar - India Based */}
       <div className="bg-gray-900 border-b border-gray-800 py-8">
         <div className="max-w-6xl mx-auto px-4">
@@ -430,27 +510,80 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Floating Action Banner */}
-      <div className="bg-gray-900 border-t border-gray-800 py-4">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div>
-            <p className="text-sm text-gray-300">
-              Ready to get started? <span className="font-semibold text-gray-100">Join TrustHire today</span>
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <Link
-              to="/worker-signup"
-              className="px-4 py-2 text-sm font-semibold bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+      {/* Newsletter Subscription Section */}
+      {/* <div className="bg-gray-900/50 border-b border-gray-800 py-12">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Stay Updated with Job Alerts</h3>
+          <p className="text-gray-400 mb-6">Get notified about new opportunities matching your skills</p>
+          
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+            <input
+              type="email"
+              placeholder="Enter your email..."
+              value={newsletter}
+              onChange={(e) => setNewsletter(e.target.value)}
+              className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none transition-colors"
+              required
+              aria-label="Subscribe to newsletter"
+            />
+            <button
+              type="submit"
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all whitespace-nowrap"
             >
-              Sign Up as Worker
-            </Link>
-            <Link
-              to="/employer-signup"
-              className="px-4 py-2 text-sm font-semibold border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              Post a Job
-            </Link>
+              Subscribe
+            </button>
+          </form>
+
+          {newsletterStatus && (
+            <div className={`mt-4 flex items-center justify-center gap-2 text-sm ${
+              newsletterStatus.type === 'success' ? 'text-green-400' : 'text-red-400'
+            }`}>
+              {newsletterStatus.type === 'success' ? (
+                <CheckCircle className="w-4 h-4" />
+              ) : (
+                <AlertCircle className="w-4 h-4" />
+              )}
+              {newsletterStatus.message}
+            </div>
+          )}
+        </div>
+      </div> */}
+
+      {/* Role-Based Sticky Action Bar */}
+      <div className="bg-gray-900 border-b border-gray-800 py-6 sticky bottom-0 z-40">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="text-center sm:text-left">
+              {user ? (
+                <p className="text-sm text-gray-300">
+                  Welcome back, <span className="font-semibold text-white">{user.name}</span>!
+                  <span className="ml-2 px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs font-semibold">
+                    {user.role?.toUpperCase()}
+                  </span>
+                </p>
+              ) : (
+                <p className="text-sm text-gray-300">
+                  <span className="font-semibold text-white">Ready to get started?</span> Join TrustHire today
+                </p>
+              )}
+            </div>
+
+            <div className="flex gap-3 flex-wrap justify-center sm:justify-end">
+              {actionButtons.map((btn, idx) => (
+                <Link
+                  key={idx}
+                  to={btn.to}
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all flex items-center gap-2 ${
+                    btn.variant === 'primary'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:shadow-lg hover:shadow-blue-500/50'
+                      : 'border border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500'
+                  }`}
+                >
+                  <span>{btn.icon}</span>
+                  <span>{btn.label}</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>
