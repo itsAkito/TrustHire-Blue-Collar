@@ -448,5 +448,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 **Built with ❤️ for blue-collar professionals**
 
 *Last Updated: February 4, 2026*
-#   T r u s t H i r e - B l u e C o l l a r -  
+#   T r u s t H i r e - B l u e C o l l a r - 
  
+ 
+

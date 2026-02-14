@@ -137,9 +137,9 @@ const EmployerSignup = () => {
         password: formData.password,
       });
 
-      login(loginResponse.data.user, loginResponse.data.token, 'employer');
-      setSuccess('Account verified and logged in successfully!');
-      setTimeout(() => navigate('/user-home'), 1500);
+      showSuccess('Email verified successfully! Please log in to your account.', 'Signup Complete');
+      setSuccess('Email verified successfully! Please log in to your account.');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'OTP verification failed. Please try again.');
     } finally {

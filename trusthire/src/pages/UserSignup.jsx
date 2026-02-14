@@ -116,9 +116,8 @@ const UserSignup = () => {
         throw new Error(data.message || 'OTP verification failed');
       }
 
-      login(data.user, data.token, 'user');
-      showSuccess('Account created successfully!');
-      navigate('/employee-dashboard');
+      showSuccess('Email verified successfully! Please log in to your account.');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       setError(err.message);
     } finally {

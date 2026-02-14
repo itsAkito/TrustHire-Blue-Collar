@@ -13,8 +13,8 @@ const RoleSelection = () => {
       description: 'Post jobs, manage applications, and find workers.',
       icon: '👔',
       gradient: 'from-blue-500 to-cyan-500',
-      path: '/login',
-      badge: 'Unified Login',
+      path: '/login-user',
+      badge: 'User Login',
     },
     {
       id: 'worker',

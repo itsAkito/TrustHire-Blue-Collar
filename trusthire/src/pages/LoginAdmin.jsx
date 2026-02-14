@@ -101,7 +101,7 @@ const LoginAdmin = () => {
 
             {/* Security Notice */}
             <div className="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg text-xs">
-              🔒 This is a secure admin portal. Unauthorized access is prohibited.
+              🔒 This is a secure admin portal. Unauthorized access is prohibited. Admin accounts are created by authorized administrators only.
             </div>
 
             {/* Sign In Button */}

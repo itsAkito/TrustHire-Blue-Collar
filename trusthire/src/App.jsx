@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import UserHome from './pages/UserHome';
 import RoleSelection from './pages/RoleSelection';
 import UnifiedLogin from './pages/UnifiedLogin';
+import LoginUser from './pages/LoginUser';
 import LoginAdmin from './pages/LoginAdmin';
 import LoginWorker from './pages/LoginWorker';
 import LoginEmployer from './pages/LoginEmployer';
@@ -54,6 +55,7 @@ function AppContent() {
           <Route path="/admin-login" element={<AdminLogin />} />
           
           {/* Other Logins */}
+          <Route path="/login-user" element={<LoginUser />} />
           <Route path="/login-admin" element={<LoginAdmin />} />
           <Route path="/login-worker" element={<LoginWorker />} />
           <Route path="/login-employer" element={<LoginEmployer />} />
